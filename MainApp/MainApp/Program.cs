@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.Serialization;
 using System.IO;
 using System.Threading;
 using System.Diagnostics;
+using System.Runtime.Serialization.Json;
+using System.Xml.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Reflection;
 
 namespace MainApp
 {
@@ -13,10 +17,41 @@ namespace MainApp
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(Thread.CurrentThread.ManagedThreadId);
             Tracer tracer = new Tracer();
             tracer.StartTrace();
+            AnyClass anyObject = new AnyClass(tracer);
+            anyObject.AnyMethod();
+            tracer.StopTrace();
+            {
+                var fileStream = new FileStream("JsonTrace.JSON", FileMode.OpenOrCreate);
+                MemoryStream source = tracer.GetJSON();
+                fileStream.Write(source.ToArray(), 0, (int)source.Length);
+                fileStream.Close();
+            }
+            {
+                var fileStream = new FileStream("XMLTrace.XML", FileMode.OpenOrCreate);
+                MemoryStream source = tracer.GetXML();
+                fileStream.Write(source.ToArray(), 0, (int)source.Length);
+                fileStream.Close();
+            }
             Console.ReadKey();
+        }
+    }
+
+    public class AnyClass
+    {
+        private ITracer tracer;
+
+        public AnyClass(ITracer _tracer)
+        {
+            tracer = _tracer;
+        }
+
+        public void AnyMethod()
+        {
+            tracer.StartTrace();
+            Thread.Sleep(10);
+            tracer.StopTrace();
         }
     }
 
@@ -33,24 +68,52 @@ namespace MainApp
         MemoryStream GetXML();
     }
 
+    [Serializable]
     public class MethodInfo
     {
+        [DataMember]
         public string name;
+        [DataMember]
         public string className;
+        [DataMember]
         public string time = "...";
+        [DataMember]
         public List<MethodInfo> methods;
+
+        public MethodInfo()
+        {
+            methods = new List<MethodInfo>();
+        }
     }
 
+    [Serializable]
     public class ThreadInfo
     {
+        [DataMember]
         public int id;
+        [DataMember]
         public string time = "...";
+        [DataMember]
         public List<MethodInfo> methods;
+
+        public ThreadInfo(int _id)
+        {
+            id = _id;
+            methods = new List<MethodInfo>();
+        }
     }
 
+    [Serializable]
+    [DataContract]
     public class TraceResult
     {
+        [DataMember]
         public SortedDictionary<int, ThreadInfo> threads;
+
+        public TraceResult()
+        {
+            threads = new SortedDictionary<int, ThreadInfo>();
+        }
     }
 
     public class Tracer: ITracer, ISerializer
@@ -82,7 +145,7 @@ namespace MainApp
             int threadId = Thread.CurrentThread.ManagedThreadId;
             if (!traceInfo.threads.ContainsKey(threadId))
             {
-                traceInfo.threads.Add(threadId, new ThreadInfo());
+                traceInfo.threads.Add(threadId, new ThreadInfo(threadId));
                 methodsStacks.Add(threadId, new Stack<Pair>());
             }
 
@@ -91,23 +154,24 @@ namespace MainApp
             newInfo.className = method.ReflectedType.ToString();
             Stopwatch stopwatch = new Stopwatch();
 
+            if (methodsStacks[threadId].Count == 0)
+            {
+                traceInfo.threads[threadId].methods.Add(newInfo);
+            }
+            else
+            {
+                methodsStacks[threadId].Peek().methodInfo.methods.Add(newInfo);
+            }
             methodsStacks[threadId].Push(new Pair(stopwatch, newInfo));
-
-            //add to result info
-
-            StackTrace trace = new StackTrace();
-            Console.WriteLine(trace.GetFrame(1).GetMethod().ReflectedType.ToString());
-            Console.WriteLine(trace.GetFrame(1).GetMethod().ToString());
-            Stopwatch watch = new Stopwatch();
-            watch.Start();
-            Thread.Sleep(10);
-            watch.Stop();
-            Console.WriteLine(Math.Round(watch.ElapsedTicks * ((double)(1000L * 1000L) / Stopwatch.Frequency)));
+            stopwatch.Start();
         }
 
         public void StopTrace()
         {
-
+            int threadId = Thread.CurrentThread.ManagedThreadId;
+            Pair currentMethod = methodsStacks[threadId].Pop();
+            currentMethod.methodWatch.Stop();
+            currentMethod.methodInfo.time = Math.Round(currentMethod.methodWatch.ElapsedTicks * (1000000d / Stopwatch.Frequency)).ToString() + "μs";
         }
 
         public TraceResult GetTraceResult()
@@ -118,12 +182,16 @@ namespace MainApp
         public MemoryStream GetJSON()
         {
             MemoryStream stream = new MemoryStream();
+            var formatter = new DataContractJsonSerializer(traceInfo.GetType());
+            formatter.WriteObject(stream, traceInfo);
             return stream;
         }
 
         public MemoryStream GetXML()
         {
             MemoryStream stream = new MemoryStream();
+            var formatter = new XmlSerializer(traceInfo.GetType());
+            formatter.Serialize(stream, traceInfo);
             return stream;
         }
     }

@@ -1,0 +1,7 @@
+D:\git\СПП\Tracer\MainApp\MainApp\bin\Debug\MainApp.exe.config
+D:\git\СПП\Tracer\MainApp\MainApp\bin\Debug\MainApp.exe
+D:\git\СПП\Tracer\MainApp\MainApp\bin\Debug\MainApp.pdb
+D:\git\СПП\Tracer\MainApp\MainApp\obj\Debug\MainApp.csprojAssemblyReference.cache
+D:\git\СПП\Tracer\MainApp\MainApp\obj\Debug\MainApp.csproj.CoreCompileInputs.cache
+D:\git\СПП\Tracer\MainApp\MainApp\obj\Debug\MainApp.exe
+D:\git\СПП\Tracer\MainApp\MainApp\obj\Debug\MainApp.pdb
