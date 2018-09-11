@@ -50,5 +50,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TracerLib\TracerLib.csproj">
+      <Project>{a0d2b0d2-23fe-4eb8-a80b-e3847c2a4e31}</Project>
+      <Name>TracerLib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

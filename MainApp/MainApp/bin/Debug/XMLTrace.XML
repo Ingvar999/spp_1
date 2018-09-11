@@ -1,0 +1,8 @@
+<root>
+	<thread id="1" time="0mks">
+		<method name="Void Main(System.String[])" class="MainApp.Program" time="11228mks">
+			<method name="Void AnyMethod()" class="MainApp.AnyClass" time="10976mks">
+			</method>
+		</method>
+	</thread>
+</root>

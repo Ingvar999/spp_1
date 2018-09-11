@@ -1,1 +1,22 @@
-{"threads":[{"Key":1,"Value":{"id":1,"methods":[{"className":"MainApp.Program","methods":[{"className":"MainApp.AnyClass","methods":[],"name":"Void AnyMethod()","time":"10473μs"}],"name":"Void Main(System.String[])","time":"10973μs"}],"time":"..."}}]}
+{
+	threads: [		{
+			"id": "1"
+			"time": "0mks"
+			"methods":
+				{
+					"name": "Void Main(System.String[])"
+					"class": "MainApp.Program"
+					"time": "11228mks"
+					"methods":
+						{
+							"name": "Void AnyMethod()"
+							"class": "MainApp.AnyClass"
+							"time": "10976mks"
+							"methods":
+								{
+								}
+						}
+				}
+	]
+}]
+}

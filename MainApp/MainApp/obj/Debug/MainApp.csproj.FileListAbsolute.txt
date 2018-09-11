@@ -5,3 +5,6 @@ D:\git\СПП\Tracer\MainApp\MainApp\obj\Debug\MainApp.csprojAssemblyReference.c
 D:\git\СПП\Tracer\MainApp\MainApp\obj\Debug\MainApp.csproj.CoreCompileInputs.cache
 D:\git\СПП\Tracer\MainApp\MainApp\obj\Debug\MainApp.exe
 D:\git\СПП\Tracer\MainApp\MainApp\obj\Debug\MainApp.pdb
+D:\git\СПП\Tracer\MainApp\MainApp\bin\Debug\TracerLib.dll
+D:\git\СПП\Tracer\MainApp\MainApp\bin\Debug\TracerLib.pdb
+D:\git\СПП\Tracer\MainApp\MainApp\obj\Debug\MainApp.csproj.CopyComplete

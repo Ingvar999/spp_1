@@ -1,0 +1,6 @@
+D:\git\СПП\Tracer\MainApp\TracerLib\bin\Debug\TracerLib.dll
+D:\git\СПП\Tracer\MainApp\TracerLib\bin\Debug\TracerLib.pdb
+D:\git\СПП\Tracer\MainApp\TracerLib\obj\Debug\TracerLib.csproj.CoreCompileInputs.cache
+D:\git\СПП\Tracer\MainApp\TracerLib\obj\Debug\TracerLib.dll
+D:\git\СПП\Tracer\MainApp\TracerLib\obj\Debug\TracerLib.pdb
+D:\git\СПП\Tracer\MainApp\TracerLib\obj\Debug\TracerLib.csprojAssemblyReference.cache
