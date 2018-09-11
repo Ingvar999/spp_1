@@ -22,25 +22,27 @@ namespace TracerLib
 
     public class MethodInfo
     {
-        public string name;
-        public string className;
-        public uint time = 0;
-        public List<MethodInfo> methods;
+        public string name { get; internal set;}
+        public string className { get; internal set; }
+        public uint time { get; internal set; }
+        public List<MethodInfo> methods { get; internal set; }
 
         public MethodInfo()
         {
             methods = new List<MethodInfo>();
+            time = 0;
         }
     }
 
     public class ThreadInfo
     {
-        public int id;
-        public uint time = 0;
-        public List<MethodInfo> methods;
+        public int id { get; internal set; }
+        public uint time { get; internal set; }
+        public List<MethodInfo> methods { get; internal set; }
 
         public ThreadInfo(int _id)
         {
+            time = 0;
             id = _id;
             methods = new List<MethodInfo>();
         }
@@ -48,7 +50,7 @@ namespace TracerLib
 
     public class TraceResult
     {
-        public SortedDictionary<int, ThreadInfo> threads;
+        public SortedDictionary<int, ThreadInfo> threads { get; internal set; }
 
         public TraceResult()
         {
@@ -112,6 +114,10 @@ namespace TracerLib
             Pair currentMethod = methodsStacks[threadId].Pop();
             currentMethod.methodWatch.Stop();
             currentMethod.methodInfo.time = (uint)Math.Round(currentMethod.methodWatch.ElapsedTicks * (1000000d / Stopwatch.Frequency));
+            if (methodsStacks[threadId].Count == 0)
+            {
+                traceInfo.threads[threadId].time += currentMethod.methodInfo.time;
+            }
         }
 
         public TraceResult GetTraceResult()

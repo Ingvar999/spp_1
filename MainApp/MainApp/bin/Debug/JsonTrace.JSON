@@ -1,22 +1,21 @@
 {
 	threads: [		{
 			"id": "1"
-			"time": "0mks"
+			"time": "11428mks"
 			"methods":
 				{
 					"name": "Void Main(System.String[])"
 					"class": "MainApp.Program"
-					"time": "11228mks"
+					"time": "11428mks"
 					"methods":
 						{
 							"name": "Void AnyMethod()"
 							"class": "MainApp.AnyClass"
-							"time": "10976mks"
+							"time": "11119mks"
 							"methods":
 								{
 								}
 						}
 				}
 	]
-}]
 }
