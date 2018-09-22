@@ -1,8 +1,24 @@
-<root>
-	<thread id="1" time="11428mks">
-		<method name="Void Main(System.String[])" class="MainApp.Program" time="11428mks">
-			<method name="Void AnyMethod()" class="MainApp.AnyClass" time="11119mks">
-			</method>
-		</method>
-	</thread>
-</root>
+<?xml version="1.0"?>
+<TraceResult xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <threads>
+    <ThreadInfo>
+      <Id>1</Id>
+      <Time>10980</Time>
+      <Methods>
+        <MethodInfo>
+          <Name>Void Main(System.String[])</Name>
+          <ClassName>MainApp.Program</ClassName>
+          <Time>10980</Time>
+          <Methods>
+            <MethodInfo>
+              <Name>Void AnyMethod()</Name>
+              <ClassName>MainApp.AnyClass</ClassName>
+              <Time>10525</Time>
+              <Methods />
+            </MethodInfo>
+          </Methods>
+        </MethodInfo>
+      </Methods>
+    </ThreadInfo>
+  </threads>
+</TraceResult>

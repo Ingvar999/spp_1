@@ -8,3 +8,9 @@ D:\git\СПП\Tracer\MainApp\MainApp\obj\Debug\MainApp.pdb
 D:\git\СПП\Tracer\MainApp\MainApp\bin\Debug\TracerLib.dll
 D:\git\СПП\Tracer\MainApp\MainApp\bin\Debug\TracerLib.pdb
 D:\git\СПП\Tracer\MainApp\MainApp\obj\Debug\MainApp.csproj.CopyComplete
+D:\git\СПП\Tracer\MainApp\MainApp\bin\Debug\TWriterLib.dll
+D:\git\СПП\Tracer\MainApp\MainApp\bin\Debug\TWriterLib.pdb
+D:\git\СПП\Tracer\MainApp\MainApp\bin\Debug\Newtonsoft.Json.dll
+D:\git\СПП\Tracer\MainApp\MainApp\bin\Debug\Newtonsoft.Json.xml
+D:\git\СПП\Tracer\MainApp\MainApp\bin\Debug\SerializeLib.dll
+D:\git\СПП\Tracer\MainApp\MainApp\bin\Debug\SerializeLib.pdb

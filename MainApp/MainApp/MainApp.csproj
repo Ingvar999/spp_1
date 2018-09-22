@@ -36,12 +36,14 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -51,10 +53,21 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SerializeLib\SerializeLib.csproj">
+      <Project>{40889d6e-0526-49de-8182-59eedc929749}</Project>
+      <Name>SerializeLib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TracerLib\TracerLib.csproj">
       <Project>{a0d2b0d2-23fe-4eb8-a80b-e3847c2a4e31}</Project>
       <Name>TracerLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TWriterLib\TWriterLib.csproj">
+      <Project>{742190f4-9a53-4e78-9014-4652e0349a00}</Project>
+      <Name>TWriterLib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

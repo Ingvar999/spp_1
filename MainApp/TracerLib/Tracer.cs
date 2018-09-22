@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Text;
+using System.Runtime.Serialization;
 using System.IO;
 using System.Threading;
 using System.Diagnostics;
+using Newtonsoft.Json;
+using System.Xml.Serialization;
 
 namespace TracerLib
 {
@@ -14,51 +18,102 @@ namespace TracerLib
         TraceResult GetTraceResult();
     }
 
-    public interface ISerializer
+    [Serializable]
+    public class MethodInfo: ICloneable
     {
-        MemoryStream GetJSON();
-        MemoryStream GetXML();
-    }
-
-    public class MethodInfo
-    {
-        public string name { get; internal set;}
-        public string className { get; internal set; }
-        public uint time { get; internal set; }
-        public List<MethodInfo> methods { get; internal set; }
+        [DataMember]
+        public string Name;
+        [DataMember]
+        public string ClassName;
+        [DataMember]
+        public uint Time;
+        [DataMember]
+        public List<MethodInfo> Methods;
 
         public MethodInfo()
         {
-            methods = new List<MethodInfo>();
-            time = 0;
+            Methods = new List<MethodInfo>();
+            Time = 0;
+        }
+
+        public object Clone()
+        {
+            var res = new MethodInfo {
+                ClassName = (string)this.ClassName.Clone(),
+                Name = (string)this.Name.Clone(),
+                Time = this.Time,
+                Methods = new List<MethodInfo>()
+            };
+            foreach(var method in Methods)
+            {
+                res.Methods.Add((MethodInfo)method.Clone());
+            }
+            return res;
         }
     }
 
-    public class ThreadInfo
+    [Serializable]
+    public class ThreadInfo: ICloneable
     {
-        public int id { get; internal set; }
-        public uint time { get; internal set; }
-        public List<MethodInfo> methods { get; internal set; }
+        [DataMember]
+        public int Id;
+        [DataMember]
+        public uint Time;
+        [DataMember]
+        public List<MethodInfo> Methods;
+
+        public ThreadInfo() { }
 
         public ThreadInfo(int _id)
         {
-            time = 0;
-            id = _id;
-            methods = new List<MethodInfo>();
+            Time = 0;
+            Id = _id;
+            Methods = new List<MethodInfo>();
+        }
+
+        public object Clone()
+        {
+            var res = new ThreadInfo
+            {
+                Id = this.Id,
+                Time = this.Time,
+                Methods = new List<MethodInfo>()
+            };
+            foreach (var method in Methods)
+            {
+                res.Methods.Add((MethodInfo)method.Clone());
+            }
+            return res;
         }
     }
 
+    class InternalTraceResult
+    {
+        public ConcurrentDictionary<int, ThreadInfo> Threads;
+
+        public InternalTraceResult()
+        {
+            Threads = new ConcurrentDictionary<int, ThreadInfo>();
+        }
+    }
+
+    [Serializable]
+    [DataContract]
     public class TraceResult
     {
-        public SortedDictionary<int, ThreadInfo> threads { get; internal set; }
 
-        public TraceResult()
+        [DataMember]
+        public readonly List<ThreadInfo> threads;
+
+        public TraceResult() { }
+
+        public TraceResult(List<ThreadInfo> source)
         {
-            threads = new SortedDictionary<int, ThreadInfo>();
+            threads = source;
         }
     }
 
-    public class Tracer : ITracer, ISerializer
+    public class Tracer : ITracer
     {
         private class Pair
         {
@@ -72,37 +127,39 @@ namespace TracerLib
             }
         }
 
-        private TraceResult traceInfo;
-        private Dictionary<int, Stack<Pair>> methodsStacks;
+        private InternalTraceResult traceInfo;
+        private ConcurrentDictionary<int, Stack<Pair>> methodsStacks;
 
         public Tracer()
         {
-            traceInfo = new TraceResult();
-            methodsStacks = new Dictionary<int, Stack<Pair>>();
+            traceInfo = new InternalTraceResult();
+            methodsStacks = new ConcurrentDictionary<int, Stack<Pair>>();
         }
 
         public void StartTrace()
         {
             var method = new StackTrace().GetFrame(1).GetMethod();
             int threadId = Thread.CurrentThread.ManagedThreadId;
-            if (!traceInfo.threads.ContainsKey(threadId))
+            if (!traceInfo.Threads.ContainsKey(threadId))
             {
-                traceInfo.threads.Add(threadId, new ThreadInfo(threadId));
-                methodsStacks.Add(threadId, new Stack<Pair>());
+                traceInfo.Threads.TryAdd(threadId, new ThreadInfo(threadId));
+                methodsStacks.TryAdd(threadId, new Stack<Pair>());
             }
 
-            MethodInfo newInfo = new MethodInfo();
-            newInfo.name = method.ToString();
-            newInfo.className = method.ReflectedType.ToString();
+            MethodInfo newInfo = new MethodInfo
+            {
+                Name = method.ToString(),
+                ClassName = method.ReflectedType.ToString()
+            };
             Stopwatch stopwatch = new Stopwatch();
 
             if (methodsStacks[threadId].Count == 0)
             {
-                traceInfo.threads[threadId].methods.Add(newInfo);
+                traceInfo.Threads[threadId].Methods.Add(newInfo);
             }
             else
             {
-                methodsStacks[threadId].Peek().methodInfo.methods.Add(newInfo);
+                methodsStacks[threadId].Peek().methodInfo.Methods.Add(newInfo);
             }
             methodsStacks[threadId].Push(new Pair(stopwatch, newInfo));
             stopwatch.Start();
@@ -113,82 +170,21 @@ namespace TracerLib
             int threadId = Thread.CurrentThread.ManagedThreadId;
             Pair currentMethod = methodsStacks[threadId].Pop();
             currentMethod.methodWatch.Stop();
-            currentMethod.methodInfo.time = (uint)Math.Round(currentMethod.methodWatch.ElapsedTicks * (1000000d / Stopwatch.Frequency));
+            currentMethod.methodInfo.Time = (uint)Math.Round(currentMethod.methodWatch.ElapsedTicks * (1000000d / Stopwatch.Frequency));
             if (methodsStacks[threadId].Count == 0)
             {
-                traceInfo.threads[threadId].time += currentMethod.methodInfo.time;
+                traceInfo.Threads[threadId].Time += currentMethod.methodInfo.Time;
             }
         }
 
         public TraceResult GetTraceResult()
         {
-            return traceInfo;
-        }
-
-        private string GetLongTab(int tabNumber)
-        {
-            string res = "\t";
-            for (int i = 1; i < tabNumber; ++i)
+            List<ThreadInfo> list = new List<ThreadInfo>();
+            foreach (var thread in traceInfo.Threads)
             {
-                res += "\t";
+                list.Add((ThreadInfo)thread.Value.Clone());
             }
-            return res;
-        }
-
-        private string GetMethodsJSON(List<MethodInfo> methods, int tab)
-        {
-            string res = GetLongTab(tab) + "\"methods\":\n";
-            res += GetLongTab(tab + 1) + "{\n";
-            foreach (var method in methods)
-            {
-                res += GetLongTab(tab + 2) + $"\"name\": \"{method.name}\"\n";
-                res += GetLongTab(tab + 2) + $"\"class\": \"{method.className}\"\n";
-                res += GetLongTab(tab + 2) + $"\"time\": \"{method.time}mks\"\n";
-                res += GetMethodsJSON(method.methods, tab + 2);
-            }
-            res += GetLongTab(tab + 1) + "}\n";
-            return res;
-        }
-
-        public MemoryStream GetJSON()
-        {
-            string res = "{\n\tthreads: [";
-            foreach (var thread in traceInfo.threads)
-            {
-                res += GetLongTab(2) + "{\n";
-                res += GetLongTab(3) + $"\"id\": \"{thread.Value.id}\"\n";
-                res += GetLongTab(3) + $"\"time\": \"{thread.Value.time}mks\"\n";
-                res += GetMethodsJSON(thread.Value.methods, 3);
-            }
-            res += "\t]\n}";
-            MemoryStream stream = new MemoryStream(Encoding.Default.GetBytes(res));
-            return stream;
-        }
-
-        private string GetMethodsXML(List<MethodInfo> methods, int tab)
-        {
-            string res = "";
-            foreach (var method in methods)
-            {
-                res += GetLongTab(tab) + $"<method name=\"{method.name}\" class=\"{method.className}\" time=\"{method.time}mks\">\n";
-                res += GetMethodsXML(method.methods, tab + 1);
-                res += GetLongTab(tab) + "</method>\n";
-            }
-            return res;
-        }
-
-        public MemoryStream GetXML()
-        {
-            string res = "<root>\n";
-            foreach (var thread in traceInfo.threads)
-            {
-                res += $"\t<thread id=\"{thread.Value.id.ToString()}\" time=\"{thread.Value.time}mks\">\n";
-                res += GetMethodsXML(thread.Value.methods, 2);
-                res += "\t</thread>\n";
-            }
-            res += "</root>";
-            MemoryStream stream = new MemoryStream(Encoding.Default.GetBytes(res));
-            return stream;
+            return new TraceResult(list);
         }
     }
 }

@@ -17,3 +17,5 @@ D:\git\СПП\Tracer\MainApp\TracerLibTests\obj\Debug\TracerLibTests.csproj.Core
 D:\git\СПП\Tracer\MainApp\TracerLibTests\obj\Debug\TracerLibTests.csproj.CopyComplete
 D:\git\СПП\Tracer\MainApp\TracerLibTests\obj\Debug\TracerLibTests.dll
 D:\git\СПП\Tracer\MainApp\TracerLibTests\obj\Debug\TracerLibTests.pdb
+D:\git\СПП\Tracer\MainApp\TracerLibTests\bin\Debug\Newtonsoft.Json.dll
+D:\git\СПП\Tracer\MainApp\TracerLibTests\bin\Debug\Newtonsoft.Json.xml

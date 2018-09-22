@@ -1,0 +1,6 @@
+D:\git\СПП\Tracer\MainApp\TWriterLib\bin\Debug\TWriterLib.dll
+D:\git\СПП\Tracer\MainApp\TWriterLib\bin\Debug\TWriterLib.pdb
+D:\git\СПП\Tracer\MainApp\TWriterLib\obj\Debug\TWriterLib.csprojAssemblyReference.cache
+D:\git\СПП\Tracer\MainApp\TWriterLib\obj\Debug\TWriterLib.csproj.CoreCompileInputs.cache
+D:\git\СПП\Tracer\MainApp\TWriterLib\obj\Debug\TWriterLib.dll
+D:\git\СПП\Tracer\MainApp\TWriterLib\obj\Debug\TWriterLib.pdb

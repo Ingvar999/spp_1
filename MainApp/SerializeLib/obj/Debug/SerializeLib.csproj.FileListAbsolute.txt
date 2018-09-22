@@ -1,0 +1,9 @@
+D:\git\СПП\Tracer\MainApp\SerializeLib\bin\Debug\SerializeLib.dll
+D:\git\СПП\Tracer\MainApp\SerializeLib\bin\Debug\SerializeLib.pdb
+D:\git\СПП\Tracer\MainApp\SerializeLib\bin\Debug\Newtonsoft.Json.dll
+D:\git\СПП\Tracer\MainApp\SerializeLib\bin\Debug\Newtonsoft.Json.xml
+D:\git\СПП\Tracer\MainApp\SerializeLib\obj\Debug\SerializeLib.csprojAssemblyReference.cache
+D:\git\СПП\Tracer\MainApp\SerializeLib\obj\Debug\SerializeLib.csproj.CoreCompileInputs.cache
+D:\git\СПП\Tracer\MainApp\SerializeLib\obj\Debug\SerializeLib.csproj.CopyComplete
+D:\git\СПП\Tracer\MainApp\SerializeLib\obj\Debug\SerializeLib.dll
+D:\git\СПП\Tracer\MainApp\SerializeLib\obj\Debug\SerializeLib.pdb

@@ -1,21 +1,23 @@
 {
-	threads: [		{
-			"id": "1"
-			"time": "11428mks"
-			"methods":
-				{
-					"name": "Void Main(System.String[])"
-					"class": "MainApp.Program"
-					"time": "11428mks"
-					"methods":
-						{
-							"name": "Void AnyMethod()"
-							"class": "MainApp.AnyClass"
-							"time": "11119mks"
-							"methods":
-								{
-								}
-						}
-				}
-	]
+  "threads": [
+    {
+      "Id": 1,
+      "Time": 10980,
+      "Methods": [
+        {
+          "Name": "Void Main(System.String[])",
+          "ClassName": "MainApp.Program",
+          "Time": 10980,
+          "Methods": [
+            {
+              "Name": "Void AnyMethod()",
+              "ClassName": "MainApp.AnyClass",
+              "Time": 10525,
+              "Methods": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

@@ -3,6 +3,8 @@ using System.Text;
 using System.IO;
 using System.Threading;
 using TracerLib;
+using TWriterLib;
+using SerializeLib;
 
 namespace MainApp
 {
@@ -15,20 +17,17 @@ namespace MainApp
             AnyClass anyObject = new AnyClass(tracer);
             anyObject.AnyMethod();
             tracer.StopTrace();
+            tracer.GetTraceResult().threads[0].Id = 0;
+            var writer = new TWriter();
             {
-                var fileStream = new FileStream("JsonTrace.JSON", FileMode.OpenOrCreate);
-                MemoryStream source = tracer.GetJSON();
-                Console.WriteLine(Encoding.UTF8.GetString(source.ToArray()));
-                fileStream.Write(source.ToArray(), 0, (int)source.Length);
-                fileStream.Close();
+                var formatter = new TXmlSerializer();
+                writer.WriteToConsole(formatter.Serialize(tracer.GetTraceResult()));
+                writer.WriteToFile(formatter.Serialize(tracer.GetTraceResult()), "XmlTrace.XML");
             }
-            Console.WriteLine();
             {
-                var fileStream = new FileStream("XMLTrace.XML", FileMode.OpenOrCreate);
-                MemoryStream source = tracer.GetXML();
-                Console.WriteLine(Encoding.UTF8.GetString(source.ToArray()));
-                fileStream.Write(source.ToArray(), 0, (int)source.Length);
-                fileStream.Close();
+                var formatter = new TJsonSerializer();
+                writer.WriteToConsole(formatter.Serialize(tracer.GetTraceResult()));
+                writer.WriteToFile(formatter.Serialize(tracer.GetTraceResult()), "JsonTrace.json");
             }
             Console.ReadKey();
         }

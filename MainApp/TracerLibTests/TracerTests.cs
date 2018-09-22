@@ -33,59 +33,64 @@ namespace TracerLibTests
     [TestClass]
     public class TracerTests
     {
+        private Tracer tracer;
+        private MyClass myObject;
+
+        private void setup()
+        {
+            tracer = new Tracer();
+            myObject = new MyClass(tracer);
+        }
+
         [TestMethod]
         public void MethodTime_10000mks()
         {
-            Tracer tracer = new Tracer();
-            MyClass myObject = new MyClass(tracer);
+            setup();
             float expected = 10000;
 
             tracer.StartTrace();
             myObject.MyMethod();
             tracer.StopTrace();
 
-            float actual = tracer.GetTraceResult().threads[Thread.CurrentThread.ManagedThreadId].methods[0].time;
+            float actual = tracer.GetTraceResult().threads[0].Methods[0].Time;
             Assert.IsTrue(actual >= expected);
         }
 
         [TestMethod]
         public void RecursiveMethodTime_10000mks()
         {
-            Tracer tracer = new Tracer();
-            MyClass myObject = new MyClass(tracer);
+            setup();
             float expected = 10000;
 
             tracer.StartTrace();
             myObject.OtherMethod();
             tracer.StopTrace();
 
-            float actual = tracer.GetTraceResult().threads[Thread.CurrentThread.ManagedThreadId].methods[0].methods[0].time;
+            float actual = tracer.GetTraceResult().threads[0].Methods[0].Methods[0].Time;
             Assert.IsTrue(actual >= expected);
         }
 
         [TestMethod]
         public void MethodName_MyMethod()
         {
-            Tracer tracer = new Tracer();
-            MyClass myObject = new MyClass(tracer);
+            setup();
             string expected = "Void MyMethod()";
 
             myObject.MyMethod();
 
-            string actual = tracer.GetTraceResult().threads[Thread.CurrentThread.ManagedThreadId].methods[0].name;
+            string actual = tracer.GetTraceResult().threads[0].Methods[0].Name;
             Assert.AreEqual(expected, actual);            
         }
 
         [TestMethod]
         public void ClassName_MyClass()
         {
-            Tracer tracer = new Tracer();
-            MyClass myObject = new MyClass(tracer);
+            setup();
             string expected = "TracerLibTests.MyClass";
 
             myObject.MyMethod();
 
-            string actual = tracer.GetTraceResult().threads[Thread.CurrentThread.ManagedThreadId].methods[0].className;
+            string actual = tracer.GetTraceResult().threads[0].Methods[0].ClassName;
             Assert.AreEqual(expected, actual);
         }
     }

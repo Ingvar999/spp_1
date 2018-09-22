@@ -4,3 +4,6 @@ D:\git\СПП\Tracer\MainApp\TracerLib\obj\Debug\TracerLib.csproj.CoreCompileInp
 D:\git\СПП\Tracer\MainApp\TracerLib\obj\Debug\TracerLib.dll
 D:\git\СПП\Tracer\MainApp\TracerLib\obj\Debug\TracerLib.pdb
 D:\git\СПП\Tracer\MainApp\TracerLib\obj\Debug\TracerLib.csprojAssemblyReference.cache
+D:\git\СПП\Tracer\MainApp\TracerLib\bin\Debug\Newtonsoft.Json.dll
+D:\git\СПП\Tracer\MainApp\TracerLib\bin\Debug\Newtonsoft.Json.xml
+D:\git\СПП\Tracer\MainApp\TracerLib\obj\Debug\TracerLib.csproj.CopyComplete
